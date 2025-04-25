@@ -34,7 +34,8 @@ class TicketResource extends Resource
                 Forms\Components\Select::make('priority')
                     ->options(self::$model::PRIORITY)
                     ->default('open')
-                    ->required(),
+                    ->required()
+                    ->in(self::$model::PRIORITY),
                 Forms\Components\Select::make('assigned_to')
                     ->relationship('assignedTo', 'name')
                     ->required(),
@@ -55,7 +56,7 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                ->description(fn (Ticket $record): string => $record->description)
+                ->description(fn (Ticket $record): string => $record?->description ?? '')
                     // ->url(fn (Ticket $record): string => route('filament.resources.tickets.edit', $record))
                     ->openUrlInNewTab()
                     ->searchable()
@@ -114,6 +115,7 @@ class TicketResource extends Resource
     {
         return [
             RelationManagers\CategoriesRelationManager::class,
+            RelationManagers\LabelsRelationManager::class,
         ];
     }
 
